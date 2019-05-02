@@ -8,6 +8,7 @@
         "sensio/framework-extra-bundle": "^5.2",
         "symfony/console": "4.2.*",
         "symfony/dotenv": "4.2.*",
+        "symfony/finder": "4.2.*",
         "symfony/flex": "^1.1",
         "symfony/form": "4.2.*",
         "symfony/framework-bundle": "4.2.*",
@@ -62,6 +63,7 @@
         }
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.11"
+        "symfony/maker-bundle": "^1.11",
+        "symfony/web-server-bundle": "4.2.*"
     }
 }
