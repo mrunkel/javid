@@ -49,7 +49,7 @@ class File
     private $uncensored;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Resolutions", inversedBy="files")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Resolution", inversedBy="files")
      */
     private $resolution;
 
@@ -140,12 +140,12 @@ class File
         return $this;
     }
 
-    public function getResolution(): ?Resolutions
+    public function getResolution(): ?Resolution
     {
         return $this->resolution;
     }
 
-    public function setResolution(?Resolutions $resolution): self
+    public function setResolution(?Resolution $resolution): self
     {
         $this->resolution = $resolution;
 
