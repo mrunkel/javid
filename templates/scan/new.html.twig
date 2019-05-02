@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Scan{% endblock %}
+
+{% block body %}
+    <h1>Create new Scan</h1>
+
+    {{ include('scan/_form.html.twig') }}
+
+    <a href="{{ path('scan_index') }}">back to list</a>
+{% endblock %}

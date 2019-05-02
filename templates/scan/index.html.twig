@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Scan index{% endblock %}
+
+{% block body %}
+    <h1>Scan index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Path</th>
+                <th>ScannedAt</th>
+                <th>CreatedAt</th>
+                <th>Completed</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for scan in scans %}
+            <tr>
+                <td>{{ scan.id }}</td>
+                <td>{{ scan.path }}</td>
+                <td>{{ scan.scannedAt ? scan.scannedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ scan.createdAt ? scan.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ scan.completed ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('scan_show', {'id': scan.id}) }}">show</a>
+                    <a href="{{ path('scan_edit', {'id': scan.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('scan_new') }}">Create new</a>
+{% endblock %}

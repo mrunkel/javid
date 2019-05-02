@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+{% block localstyles %}
+    <link href="/assets/css/quick.css" rel="stylesheet">
+{% endblock %}
+{% block body %}
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+            <tr>
+                <th>Field</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>id</td>
+                    <td>{{ scan.id }}</td>
+                </tr>
+                <tr>
+                    <td>path</td>
+                    <td>{{ scan.path }}</td>
+                </tr>
+                <tr>
+                    <td>scanned_at</td>
+                    <td>{{ scan.scannedAt|date('Y-m-d\\TH:i:s') }}</td>
+                </tr>
+                <tr>
+                    <td>created_at</td>
+                    <td>{{ scan.createdAt|date('Y-m-d\\TH:i:s') }}</td>
+                </tr>
+                <tr>
+                    <td>completed</td>
+                    <td>{{ scan.completed }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+{% endblock %}

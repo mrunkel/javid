@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+{% block localstyles %}
+    <link href="/assets/css/quick.css" rel="stylesheet">
+{% endblock %}
+{% block body %}
+    {{ form(form) }}
+    {% for error in errors %}
+        <div class="alert alert-danger" role="alert">{{ error }}</div>
+    {% endfor %}
+    {% for msg in messages %}
+        <div class="alert alert-success" role="alert">{{ msg }}</div>
+    {% endfor %}
+{% endblock %}

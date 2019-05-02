@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Resolution{% endblock %}
+
+{% block body %}
+    <h1>Edit Resolution</h1>
+
+    {{ include('resolution/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('resolution_index') }}">back to list</a>
+
+    {{ include('resolution/_delete_form.html.twig') }}
+{% endblock %}
