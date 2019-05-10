@@ -3,24 +3,16 @@
 namespace App\Command;
 
 use App\Entity\Scan;
-#use Psr\Container\ContainerInterface;
+use App\Service\ScanProcessor;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ProcessScansCommand extends Command
 {
     protected static $defaultName = 'app:processScans';
-    private $container;
-
-    public function __construct(ContainerInterface $container)
-    {
-        parent::__construct();
-        $this->container = $container;
-    }
 
     protected function configure()
     {
@@ -38,12 +30,15 @@ class ProcessScansCommand extends Command
             $max = 1;
         }
 
+        $sp = new ScanProcessor(null);
 
-        $scans   = $this->container->get('doctrine')->getRepository(Scan::class);
-        $mgr     = $this->container->get('doctrine')->getManager();
-        $process = $scans->findBy(['completed' => 0], $max);
-        foreach ($process as $scan) {
-            $scan->scanDir();
+        $scansToProcess = $sp->getScans($max);
+        foreach ($scansToProcess as $scan) {
+            try {
+                $sp->scanDir($scan);
+            } catch (\Exception $e) {
+
+            }
         }
 
     }

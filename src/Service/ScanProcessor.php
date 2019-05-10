@@ -9,28 +9,44 @@ namespace App\Service;
 
 
 use App\Entity\File;
+use App\Entity\Scan;
 use App\Entity\Movie;
 use App\Entity\Resolution;
+use App\Repository\ScanRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\Finder;
 
 class ScanProcessor extends AbstractController
 {
 
-    private $container;
+    private $em;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(EntityManagerInterface $em)
     {
-        $this->container = $container;
+        $this->em = $em;
     }
 
+    /**
+     * @param int $max
+     *
+     * @return ScanRepository
+     */
+    public function getScans($max = 5) {
+        $scans   = $this->container->get('doctrine')->getRepository(Scan::class);
+        $mgr     = $this->container->get('doctrine')->getManager();
+        return $scans->findBy(['completed' => 0], null, $max);
+    }
 
-    public function scanDir()
+    /**
+     * @param Scan $scan
+     *
+     * @throws \Exception
+     */
+    public function scanDir(Scan $scan)
     {
-        $path          = $this->getPath();
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($this);
+        $path = $scan->getPath();
+        $this->em->persist($scan);
 
         $validExtensions = ['*.mp4', '*.mkv', '*.avi', '*.wmv', '*.rmvb', '*.m4v', '*.flv'];
 
@@ -112,10 +128,10 @@ class ScanProcessor extends AbstractController
 
             if (!$files->findOneBy(['name' => $baseName, 'path' => $path])) {
                 $file = new File();
-                $entityManager->persist($file);
+                $this->em->persist($file);
                 $output[] = $line;
                 $file->setPath($path);
-                $file->addScan($this);
+                $file->addScan($scan);
                 $file->setName($baseName);
 
                 if ($resolution) {
@@ -123,7 +139,7 @@ class ScanProcessor extends AbstractController
                     if (!$resObj = $resolution->findOneBy(['name' => $resolution])) {
                         $resObj = new Resolution();
                         $resObj->setName($resolution);
-                        $entityManager->persist($resObj);
+                        $this->em->persist($resObj);
                     }
                     $file->setResolution($resObj);
                 }
@@ -132,7 +148,7 @@ class ScanProcessor extends AbstractController
                     if (!$movie = $movies->findOneBy(['code' => $code])) {
                         $movie = new Movie();
                         $movie->setCode($code);
-                        $entityManager->persist($movie);
+                        $this->em->persist($movie);
                     }
                     $file->setMovie($movie);
                 }
@@ -143,15 +159,14 @@ class ScanProcessor extends AbstractController
                 }
                 $file->setSubs($line->subs);
                 $file->setUncensored($line->unc);
-                $this->addFound($file);
-                $entityManager->flush();
+                $scan->addFound($file);
+                $this->em->flush();
             }
         }
 
-        $this->setCompleted(true);
-        $this->setScannedAt(new \DateTime());
-        $entityManager->flush();
-
+        $scan->setCompleted(true);
+        $scan->setScannedAt(new \DateTime());
+        $this->em->flush();
 
     }
 
